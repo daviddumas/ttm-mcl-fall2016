@@ -1,0 +1,20 @@
+# Backup and temp
+*~
+*.orig
+*.lock
+*.DS_Store
+*.swp
+*.out
+*.tmp
+tags
+TAGS
+\#*#
+.\#*
+
+# IntelliJ
+.idea/
+
+# Subdirectories reserved for stuff we won't commit
+build/
+temp/
+tmp/
