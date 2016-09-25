@@ -35,11 +35,26 @@
         renderer.setClearColor(0x000000);
         renderer.setSize(window.innerWidth, window.innerHeight);
         
-        var torus = createMesh(new THREE.TorusGeometry(10, 2, 8, 6, Math.PI * 0.5));
-        // add the sphere to the scene
-        scene.add(torus);
-		torus.position.x = 0;
-		torus.position.y = 0;
+        var arc1 = createMesh(new THREE.TorusGeometry(10, 2, 8, 6, Math.PI * 0.5));
+                
+		arc1.position.x = 0;
+		arc1.position.y = 0;
+		// add the first arc to the scene
+		scene.add(arc1);
+		
+		//Generates and adds a second arc to the scene.
+		var arc2 = createMesh(new THREE.TorusGeometry( 10,2,8,6, Math.PI * 0.5 ));
+		arc2.position.x = 0;
+		arc2.rotation.y = Math.PI;
+		scene.add(arc2);
+		
+		//Generates and adds a third arc to the scene.
+		var arc3 = createMesh(new THREE.TorusGeometry( 10,2,8,6, Math.PI * 0.5 ));
+		arc3.position.x = 20;
+		//arc3.rotation.y = Math.PI;
+		arc3.rotation.z = Math.PI;
+		scene.add(arc3);
+		
 		
 		//Sets up the camera to be able to rotate based on user preference
 		var trackballControls = new THREE.TrackballControls(camera);
@@ -64,12 +79,12 @@
 		
 		
         render();
-        function createMesh(geom) {
+        function createMesh(geom) { //Creates an arc
             // assign two materials
-            var meshMaterial = new THREE.MeshNormalMaterial();
+            var meshMaterial = new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff } );
             meshMaterial.side = THREE.DoubleSide;
-            var wireFrameMat = new THREE.MeshBasicMaterial();
-            wireFrameMat.wireframe = false;
+            var wireFrameMat = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+            wireFrameMat.wireframe = true;
             // create a multimaterial
             var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial, wireFrameMat]);
             return mesh;
@@ -79,7 +94,7 @@
 			var delta = clock.getDelta();
 			trackballControls.update(delta);
 			
-            torus.rotation.x = controls.rotation;
+            arc1.rotation.x = controls.rotation;
             // render using requestAnimationFrame
             requestAnimationFrame(render);
             renderer.render(scene, camera);
