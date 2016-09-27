@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Example 05.08 - Basic 3D geometries - Torus</title>
+    <title>03_ArcSimulation</title>
     <script src= "js/three.js"></script>
 	<script src= "js/DAT.GUI.js"></script>
 	<script src= "js/TrackballControls.js"></script>
@@ -56,7 +56,7 @@
 		scene.add(arc3);
 		
 		
-		//Sets up the camera to be able to rotate based on user preference
+		//Sets up the camera to be able to rotate and zoom based on user preference
 		var trackballControls = new THREE.TrackballControls(camera);
 		trackballControls.rotateSpeed = 4.0;
 		trackballControls.zoomSpeed = 0.05;
@@ -66,16 +66,15 @@
         
         // setup the control gui
         var controls = new function () {
-            // we need the first child, since it's a multimaterial
-            this.rotation = .02;
+            
+            this.angleOfRotation = .00;
             
             
         };
         var gui = new DAT.GUI();
-        gui.add(controls, 'rotation', 0, 6.25);
+        gui.add(controls, 'angleOfRotation', 0, Math.PI * 2);
         
 		var clock = new THREE.Clock();
-
 		
 		
         render();
@@ -89,12 +88,30 @@
             var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial, wireFrameMat]);
             return mesh;
         }
+		
+		function translationRotationXAxis( geom , angle){ //Suppose to move object to origin then rotate, then move back.
+		var previousXPostion = geom.position.x;
+		var previousYPosition = geom.position.y;
+		var previousZPosition = geom.position.z;
+		
+		geom.position.x = 0;
+		geom.position.y = 0;
+		geom.position.z = 0;
+		
+		geom.rotation.x = angle;
+		
+		previousXPostion = geom.position.x;
+		previousYPosition = geom.position.y;
+		previousZPosition = geom.position.z;
+		
+		return geom; 		
+		}
         function render() {
             
 			var delta = clock.getDelta();
 			trackballControls.update(delta);
 			
-            arc1.rotation.x = controls.rotation;
+            translationRotationXAxis(arc2, controls.angleOfRotation);
             // render using requestAnimationFrame
             requestAnimationFrame(render);
             renderer.render(scene, camera);
