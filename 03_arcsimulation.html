@@ -1,10 +1,11 @@
 <html>
 
 <head>
-    <title>03_ArcSimulation</title>
+    <title>03_Test</title>
     <script src= "js/three.js"></script>
 	<script src= "js/DAT.GUI.js"></script>
 	<script src= "js/TrackballControls.js"></script>
+	
 
     <style>
         body {
@@ -23,102 +24,192 @@
 <!-- Javascript code that runs our Three.js examples -->
 <script type="text/javascript">
     // once everything is loaded, we run our Three.js stuff.
-    function init() {
+	
+	//Create Arcs using matrices
+	var arc1, arc2, arc3, arc4, arc5;
+	
+	var N = new THREE.Matrix4();
+	N.set( 
+		0, -1, 0, 0, 
+		1,  0, 0, 0,
+		0,  0, 1, 0,
+	    0, 0, 0, 1);
+	// Matrices for the arcs.
+	var arcMatrix1 = new THREE.Matrix4();	
+	var arcMatrix2 = new THREE.Matrix4();
+	arcMatrix2.copy( N );
+	var arcMatrix3 = new THREE.Matrix4();
+	arcMatrix3.multiplyMatrices( N, N );
+	var arcMatrix4 = new THREE.Matrix4();
+	arcMatrix4.multiplyMatrices( arcMatrix3, N );
+	var arcMatrix5 = new THREE.Matrix4();
+	
+	// Angles of rotation between two arcs.
+	var theta12, theta23, theta34, theta45, theta14;
+	
+	//Rotation Matrix.
+	var R12 = new THREE.Matrix4();
+	
+	// Elements in a matrix.
+	var elements;
+		
+	//Identity matrix
+	var I = new THREE.Matrix4();
+	
+	var M = new THREE.Matrix4();
+	M.set( 
+		0, -1, 0, 0, 
+		1,  0, 0, 0,
+		0,  0, 1, 0,
+	    0, 0, 0, 1);
+		
+	
+	
+	function createArc( matrix4 ){
+	
+	//var elements = matrix4.elements;
+	var geometry = new THREE.TorusGeometry( 1, .30, 8, 6, Math.PI * 0.5);
+	var material = new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff } );
+	
+	
+	var arc = new THREE.Mesh( geometry, material );
+	arc.matrix.copy( matrix4 );
+	return arc;
+	
+	}
+	
+	function rotateOnXAxis( matrix4, angle ){
+	
+	var preTranslation = new THREE.Matrix4();
+	preTranslation.makeTranslation(0,-1,0);
+	
+	var postTranslation = new THREE.Matrix4();
+	postTranslation.makeTranslation(0,1,0);
+	
+	var rotationX = new THREE.Matrix4();
+	rotationX.makeRotationX( angle );
+	
+	matrix4.premultiply( preTranslation );
+	
+	matrix4.multiplyMatrices( rotationX, matrix4 );
+	matrix4.premultiply( postTranslation );
+	
+	}
+	
+	function rotateOnYAxis( matrix4, angle ){
+	
+	var preTranslation = new THREE.Matrix4();
+	preTranslation.makeTranslation(-1,0,0);
+	
+	var postTranslation = new THREE.Matrix4();
+	postTranslation.makeTranslation(1,0,0);
+	
+	var rotationY = new THREE.Matrix4();
+	rotationY.makeRotationY( angle );
+	
+	matrix4.premultiply( preTranslation );
+	
+	matrix4.multiplyMatrices( rotationY, matrix4 );
+	matrix4.premultiply( postTranslation );
+	
+	}
+	
+	function init() {
         
         // create a scene, that will hold all our elements such as objects, cameras and lights.
         var scene = new THREE.Scene();
         // create a camera, which defines where we're looking at.
         var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-		camera.position.z = 50;
+		camera.position.z = 5;
         // create a render and set the size
         var renderer = new THREE.WebGLRenderer();
         renderer.setClearColor(0x000000);
         renderer.setSize(window.innerWidth, window.innerHeight);
-        
-        var arc1 = createMesh(new THREE.TorusGeometry(10, 2, 8, 6, Math.PI * 0.5));
-                
-		arc1.position.x = 0;
-		arc1.position.y = 0;
-		// add the first arc to the scene
-		scene.add(arc1);
-		
-		//Generates and adds a second arc to the scene.
-		var arc2 = createMesh(new THREE.TorusGeometry( 10,2,8,6, Math.PI * 0.5 ));
-		arc2.position.x = 0;
-		arc2.rotation.y = Math.PI;
-		scene.add(arc2);
-		
-		//Generates and adds a third arc to the scene.
-		var arc3 = createMesh(new THREE.TorusGeometry( 10,2,8,6, Math.PI * 0.5 ));
-		arc3.position.x = 20;
-		//arc3.rotation.y = Math.PI;
-		arc3.rotation.z = Math.PI;
-		scene.add(arc3);
-		
+	
+		// add the output of the renderer to the html element
+        document.getElementById("WebGL-output").appendChild(renderer.domElement);
 		
 		//Sets up the camera to be able to rotate and zoom based on user preference
 		var trackballControls = new THREE.TrackballControls(camera);
 		trackballControls.rotateSpeed = 4.0;
 		trackballControls.zoomSpeed = 0.05;
+					
+		var clock = new THREE.Clock();
 		
-        // add the output of the renderer to the html element
-        document.getElementById("WebGL-output").appendChild(renderer.domElement);
-        
-        // setup the control gui
+		
+		
+		
+		arc1 = createArc( arcMatrix1 );
+		scene.add( arc1 ); 
+		
+		
+		
+		arc2 = createArc( arcMatrix2 );
+		
+			
+		arc2.matrixAutoUpdate = false;
+		
+		scene.add( arc2 );
+		
+		arc3 = createArc( arcMatrix3 );
+		
+		arc3.matrixAutoUpdate = false;
+		
+		//scene.add( arc3 );
+		
+		arc4 = createArc( arcMatrix4 );
+		arc4.matrixAutoUpdate = false;
+		
+		scene.add( arc4 );
+		
+		
+				// setup the control gui
         var controls = new function () {
-            
-            this.angleOfRotation = .00;
+				// make sure that the parent object has an attribute called "angleOfRotation1".
+            this.angleOfRotation1 = .00;
+			this.angleOfRotation2 = .00;
             
             
         };
         var gui = new DAT.GUI();
-        gui.add(controls, 'angleOfRotation', 0, Math.PI * 2);
-        
-		var clock = new THREE.Clock();
+        gui.add(controls, 'angleOfRotation1', 0, Math.PI * 2);
+        //				   ^^^^^^^^^^^^^^^ there must be an attribute of this name.
+		//								   That's why we create it in "controls".
+		gui.add(controls, 'angleOfRotation2', 0, Math.PI * 2);
 		
 		
-        render();
-        function createMesh(geom) { //Creates an arc
-            // assign two materials
-            var meshMaterial = new THREE.MeshBasicMaterial( { color: Math.random() * 0xffffff } );
-            meshMaterial.side = THREE.DoubleSide;
-            var wireFrameMat = new THREE.MeshBasicMaterial( { color: 0x000000 } );
-            wireFrameMat.wireframe = true;
-            // create a multimaterial
-            var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial, wireFrameMat]);
-            return mesh;
-        }
+		render();
+				
 		
-		function translationRotationXAxis( geom , angle){ //Suppose to move object to origin then rotate, then move back.
-		var previousXPostion = geom.position.x;
-		var previousYPosition = geom.position.y;
-		var previousZPosition = geom.position.z;
-		
-		geom.position.x = 0;
-		geom.position.y = 0;
-		geom.position.z = 0;
-		
-		geom.rotation.x = angle;
-		
-		previousXPostion = geom.position.x;
-		previousYPosition = geom.position.y;
-		previousZPosition = geom.position.z;
-		
-		return geom; 		
-		}
-        function render() {
-            
-			var delta = clock.getDelta();
+		function render() {
+			
+			
+            var delta = clock.getDelta();
 			trackballControls.update(delta);
 			
-            translationRotationXAxis(arc2, controls.angleOfRotation);
+			//angle of rotation between arc1 and arc2.
+            theta12 = controls.angleOfRotation1;
+			theta14 = controls.angleOfRotation2;					
+			rotateOnXAxis(arc2.matrix, theta12);
+			rotateOnYAxis(arc4.matrix, theta14)
+			
+			
+			
             // render using requestAnimationFrame
             requestAnimationFrame(render);
             renderer.render(scene, camera);
         }
-       
-    }
-    window.onload = init;
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	window.onload = init;
 </script>
 </body>
 </html>
+
