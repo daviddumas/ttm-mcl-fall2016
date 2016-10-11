@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>03_ArcSimulation</title>
+    <title>03_Test</title>
     <script src= "js/three.js"></script>
 	<script src= "js/DAT.GUI.js"></script>
 	<script src= "js/TrackballControls.js"></script>
@@ -55,7 +55,20 @@
 		
 	//Identity matrix
 	var I = new THREE.Matrix4();
+<<<<<<< HEAD
 		
+=======
+	
+	var M = new THREE.Matrix4();
+	M.set( 
+		0, -1, 0, 0, 
+		1,  0, 0, 0,
+		0,  0, 1, 0,
+	    0, 0, 0, 1);
+		
+	
+	
+>>>>>>> a8714f5715c5f674e8727b3256b7edce76d5071d
 	function createArc( matrix4 ){
 	
 	//var elements = matrix4.elements;
@@ -113,7 +126,10 @@
         // create a camera, which defines where we're looking at.
         var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 		camera.position.z = 5;
+<<<<<<< HEAD
 		
+=======
+>>>>>>> a8714f5715c5f674e8727b3256b7edce76d5071d
         // create a render and set the size
         var renderer = new THREE.WebGLRenderer();
         renderer.setClearColor(0x000000);
@@ -133,6 +149,7 @@
 		
 		
 		arc1 = createArc( arcMatrix1 );
+<<<<<<< HEAD
 		scene.add( arc1 ); 		
 		
 		
@@ -146,6 +163,28 @@
 		
 		arc4 = createArc( arcMatrix4 );
 		arc4.matrixAutoUpdate = false;
+=======
+		scene.add( arc1 ); 
+		
+		
+		
+		arc2 = createArc( arcMatrix2 );
+		
+			
+		arc2.matrixAutoUpdate = false;
+		
+		scene.add( arc2 );
+		
+		arc3 = createArc( arcMatrix3 );
+		
+		arc3.matrixAutoUpdate = false;
+		
+		//scene.add( arc3 );
+		
+		arc4 = createArc( arcMatrix4 );
+		arc4.matrixAutoUpdate = false;
+		
+>>>>>>> a8714f5715c5f674e8727b3256b7edce76d5071d
 		scene.add( arc4 );
 		
 		
@@ -175,11 +214,16 @@
 			
 			//angle of rotation between arc1 and arc2.
             theta12 = controls.angleOfRotation1;
+<<<<<<< HEAD
 								
 			rotateOnXAxis(arc2.matrix, theta12);
 			
 			//angle of rotation between arc1 and arc4.
 			theta14 = controls.angleOfRotation2;
+=======
+			theta14 = controls.angleOfRotation2;					
+			rotateOnXAxis(arc2.matrix, theta12);
+>>>>>>> a8714f5715c5f674e8727b3256b7edce76d5071d
 			rotateOnYAxis(arc4.matrix, theta14)
 			
 			
@@ -201,3 +245,7 @@
 </script>
 </body>
 </html>
+<<<<<<< HEAD
+=======
+
+>>>>>>> a8714f5715c5f674e8727b3256b7edce76d5071d
