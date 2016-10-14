@@ -45,10 +45,15 @@ function newArc(){
     return arc;
 }
 
-function Rot(theta){
-    m = new THREE.Matrix4();
-    m.makeRotationX(theta);
-    return m;
+function LinkRot(theta){
+    R = new THREE.Matrix4();
+    var c = Math.cos(theta);
+    var s = Math.sin(theta);
+    R.set(1,0,0,0,
+          0,c,-s,1-c,
+          0,s,c,-s,
+          0,0,0,1);
+    return R;
 }
 
 // Link objects; are global so visible in render()
@@ -110,18 +115,18 @@ function init() {
 	
 	//angle of rotation between arc1 and arc2.
         var m = new THREE.Matrix4();
-        m.copy(N);
-        m.multiply(Rot(controls.T12));
+        m.multiply(LinkRot(controls.T12));
+        m.multiply(N);
 
         arc2.matrix.copy(m);
 
+        m.multiply(LinkRot(controls.T23));
         m.multiply(N);
-        m.multiply(Rot(controls.T23));
 
         arc3.matrix.copy(m);
 
+        m.multiply(LinkRot(controls.T34));
         m.multiply(N);
-        m.multiply(Rot(controls.T34));
 
         arc4.matrix.copy(m);
         
