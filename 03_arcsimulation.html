@@ -165,36 +165,29 @@ function init() {
 		
 	//angle of rotation between arc1 and arc2.
         var m = new THREE.Matrix4();
-        m.copy(N);
-		
+
 		preTranslation.makeTranslation(0,-1,0);
 		postTranslation.makeTranslation(0,1,0);
 		
-		m.premultiply( preTranslation );
-		m.premultiply(RotX(controls.T12));
-		m.premultiply( postTranslation );
+		m.multiply( postTranslation );
+		m.multiply(RotX(controls.T12));
+		m.multiply( preTranslation );
+                m.multiply( N );
 		
 		//Rotation between arc2 and arc3.
         arc2.matrix.copy(m);
+
+		m.multiply( postTranslation );
+		m.multiply(RotX(controls.T23));
+		m.multiply( preTranslation );
+                m.multiply( N );
 		
-		preTranslation.makeTranslation(1,0,0);
-		postTranslation.makeTranslation(-1,0,0);
-		
-        m.multiply(N);
-		m.premultiply( preTranslation );
-        m.premultiply(RotY(controls.T23));
-		m.premultiply( postTranslation );
         arc3.matrix.copy(m);
-        m.multiply(N);
-		
-		
-		//Rotation between arc3 and arc4.
-		preTranslation.makeTranslation(0,1,0);
-		postTranslation.makeTranslation(0,-1,0);
-        
-		m.premultiply( preTranslation );
-		m.premultiply(RotX(controls.T34));
-		m.premultiply( postTranslation );
+
+		m.multiply( postTranslation );
+		m.multiply(RotX(controls.T34));
+		m.multiply( preTranslation );
+                m.multiply( N );
 		
         arc4.matrix.copy(m);
         
