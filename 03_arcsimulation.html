@@ -56,20 +56,6 @@ function RotY(theta){
     return m;
 }
 
-//Function for translating an arc to the X-axis. Does not work yet.....
-/*function shiftX( matrix4 ){
-	var elements = matrix4.elements;
-	var translation = new THREE.Matrix4();
-	if( elements[13] < 0 )
-		translation.makeTranslation(0, elements[13] + 1, 0 );
-		}
-	else{
-	translation.makeTranslation(0, -elements[13] - 1, 0);
-	}
-	matrix4.premultiply( translation );
-	return matrix4;
-}*/
-
 // Link objects; are global so visible in render()
 var arc1, arc2, arc3, arc4;
 function init() {    
