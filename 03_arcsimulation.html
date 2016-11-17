@@ -4,7 +4,7 @@
     <title>03_ArcSimulation</title>
 	<a href="index.html">Back to list of visualizations</a>
     <script src= "js/three.js"></script>
-    <script src= "js/DAT.GUI.js"></script>
+    <script src= "js/dat.gui.js"></script>
     <script src= "js/TrackballControls.js"></script>
 	
 
@@ -67,7 +67,7 @@ function init() {
     renderer.setClearColor(0x000000);
     renderer.setSize(window.innerWidth, window.innerHeight);
     // Trackball camera controls
-    var trackballControls = new THREE.TrackballControls(camera);
+    var trackballControls = new THREE.TrackballControls(camera, document.getElementById("WebGL-output").appendChild(renderer.domElement));
     trackballControls.rotateSpeed = 4.0;
     trackballControls.zoomSpeed = 0.05;
     
@@ -130,7 +130,7 @@ function init() {
 	this.T23 = 0.0;                
 	this.T34 = 0.0;                
     };
-    var gui = new DAT.GUI();
+    var gui = new dat.GUI();
     gui.add(controls, 'T12', 0, Math.PI * 2);
     gui.add(controls, 'T23', 0, Math.PI * 2);
     gui.add(controls, 'T34', 0, Math.PI * 2);
