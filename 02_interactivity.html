@@ -11,7 +11,7 @@
 <body>
 	<a href="index.html">Back to list of visualizations</a>
 	<script src= "js/three.js"></script>
-	<script src= "js/DAT.GUI.js"></script>
+	<script src= "js/dat.gui.js"></script>
 	<script src= "js/TrackballControls.js"></script>
 
 <script>
@@ -28,9 +28,14 @@ function init() {
 
 scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera( 75, innerWidth/innerHeight , 0.1, 1000 );
+renderer = new THREE.WebGLRenderer();
+renderer.setClearColor(0x000000);
+renderer.setSize( innerWidth, innerHeight );
+document.body.appendChild(renderer.domElement);
+
 
 //Sets up the camera to be able to rotate based on user preference
-var trackballControls = new THREE.TrackballControls(camera);
+var trackballControls = new THREE.TrackballControls(camera, document.body.appendChild(renderer.domElement));
 trackballControls.rotateSpeed = 4.0;
 trackballControls.zoomSpeed = 0.05;
 //trackballControls.panSpeed = 1.0;
@@ -38,10 +43,7 @@ trackballControls.zoomSpeed = 0.05;
 
 
 
-renderer = new THREE.WebGLRenderer();
-renderer.setClearColor(0x000000);
-renderer.setSize( innerWidth, innerHeight );
-document.body.appendChild(renderer.domElement);
+
 
 var geometry1 = new THREE.BoxGeometry(2,2,2);
 // Cube face colors
@@ -84,7 +86,7 @@ var controls = new function() {
 	this.rotation = 0.02;
 	}
 
-var gui = new DAT.GUI();
+var gui = new dat.GUI();
 gui.add(controls, 'rotation', 0, 6.25);
 
 
