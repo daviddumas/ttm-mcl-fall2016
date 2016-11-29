@@ -7,14 +7,14 @@
     <script src= "js/dat.gui.js"></script>
     <script src= "js/TrackballControls.js"></script>
 	
-
-    <style>
+<style>
         body {
             /* set margin to 0 and overflow to hidden, to go fullscreen */
             margin: 0;
             overflow: hidden;
         }
     </style>
+    
 </head>
 <body>
 	
@@ -35,16 +35,17 @@ N.set(
     1,  0, 0, 0,
     0,  0, 1, 0,
     0, 0, 0, 1);
-var N2 = new THREE.Matrix4();
-N2.multiplyMatrices(N,N);
-var N3 = new THREE.Matrix4();
-N3.multiplyMatrices(N2,N);
-
-//Index for the four different colors.
+	
+//Count of how many arcs have been created.
 var c = 0;
+
+//Function for creating a new arc.
 function newArc(){
-    var paletter = new Array(0xff0000, 0x5000ff, 0xffff00, 0x00ff00);
-	var material = new THREE.MeshBasicMaterial( { color: paletter[ c % 4 ] } )
+
+	//Array of colors for the arcs.
+    var palette = new Array(0xff0000, 0x8800ff, 0xffff00, 0x00ff00);
+	
+	var material = new THREE.MeshBasicMaterial( { color: palette[ c % 4 ] } )
 	c++;
 	
 	var geometry = new THREE.TorusGeometry( 1, .30, 100, 10, Math.PI * 0.5);
@@ -54,19 +55,28 @@ function newArc(){
 	
 }
 
-function RotX(theta){
-    m = new THREE.Matrix4();
-    m.makeRotationX(theta);
-    return m;
+//Function for rotating the arcs about the X-axis by theta degrees.
+function LinkRot(theta){
+    R = new THREE.Matrix4();
+    var c = Math.cos(theta);
+    var s = Math.sin(theta);
+    R.set(1,0,0,0,
+          0,c,-s,1-c,
+          0,s,c,-s,
+          0,0,0,1);
+    return R;
 }
 
 // Link objects; are global so visible in render()
-var arc1, arc2, arc3, arc4, arc5, arc6, arc7, arc8;
+var arc1, arc2, arc3, arc4, arc5, arc6, arc7, arc8, arc9, arc10, arc11, arc12, arc13, arc14, arc15;
+
+//Global variable for the X,Y,Z axes. Accessible in render.
+var axes; 
 function init() {    
     // scene, camera, renderer init
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 50;
+    camera.position.z = 25;
     var renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(0x000000);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -74,9 +84,9 @@ function init() {
     var trackballControls = new THREE.TrackballControls(camera, document.getElementById("WebGL-output").appendChild(renderer.domElement) );
     trackballControls.rotateSpeed = 4.0;
     trackballControls.zoomSpeed = 0.05;
-    
+    trackballControls.panSpeed = 0.05;
 	// Adapted from website: https://soledadpenades.com/articles/three-js-tutorials/drawing-the-coordinate-axes/.
-	/*function buildAxis( src, dst, axisColor, dashed ) {
+	function buildAxis( src, dst, axisColor, dashed ) {
         var geom = new THREE.Geometry(),
         mat; 
 
@@ -95,7 +105,7 @@ function init() {
         return axis;
 	}
 	function buildAxes( length ) {
-        var axes = new THREE.Object3D();
+        axes = new THREE.Object3D();
 
         axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( length, 0, 0 ), 0xFF0000, true ) ); // +X
         axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( -length, 0, 0 ), 0xFF0000, true) ); // -X
@@ -109,12 +119,13 @@ function init() {
         return axes;
 	}
 	
-	buildAxes( 1000 );*/
+	buildAxes( 1000 );
 	
 	
     // place canvas in the target div
     document.getElementById("WebGL-output").appendChild(renderer.domElement);
     
+	//Adding arcs to the scene 
     var clock = new THREE.Clock();
     arc1 = newArc();
     scene.add( arc1 ); 
@@ -130,20 +141,17 @@ function init() {
 	
 	arc5 = newArc();
     scene.add( arc5 ); 
-    arc5.visible = false;
-	
+    
 	arc6 = newArc();
     scene.add( arc6 ); 
-	arc6.visible = false;
 	
 	arc7 = newArc();
     scene.add( arc7 ); 
-    arc7.visible = false;
-	
-    arc8 = newArc();
+    
+	arc8 = newArc();
     scene.add( arc8 ); 
-	arc8.visible = false;
 	
+	//Setting arcs after 8 false until user decides to add more
 	arc9 = newArc();
     scene.add( arc9 ); 
 	arc9.visible = false;
@@ -192,8 +200,10 @@ function init() {
 	T1314: 0,
 	T1415: 0,
 	controller: 8,
+	hideAxes: false,
     };
 	
+	//Set angles for special configurations 
 	var  configData = {
   "closed": false,
   "remembered": {
@@ -213,7 +223,8 @@ function init() {
 		"T1213": 0,
 		"T1314": 0,
 		"T1415": 0,
-		"controller": 8,        
+		"controller": 8,
+		"hideAxes": false,        
       }
     },
     "Octagon": {
@@ -233,7 +244,7 @@ function init() {
 		"T1314": 0,
 		"T1415": 0,
 		"controller": 8,
-        
+        "hideAxes": false,
       }
     },
     "Peanut": {
@@ -252,7 +263,8 @@ function init() {
 		"T1213": 0,
 		"T1314": 0,
 		"T1415": 0,
-		"controller": 8,        
+		"controller": 8, 
+		"hideAxes": false,		
       }
     },
 	"S": {
@@ -271,7 +283,8 @@ function init() {
 		"T1213": 0,
 		"T1314": 0,
 		"T1415": 0,
-		"controller": 8,        
+		"controller": 8,
+		"hideAxes": false,
       }
     },
     "U": {
@@ -290,7 +303,8 @@ function init() {
 		"T1213": 0,
 		"T1314": 0,
 		"T1415": 0,
-		"controller": 8,       
+		"controller": 8, 
+		"hideAxes": false,
       }
     },
 	"Eight": {
@@ -310,6 +324,7 @@ function init() {
 		"T1314": 0,
 		"T1415": 0,
 		"controller": 8,
+		"hideAxes": false,
       }
     },
 	"Pentagon": {
@@ -329,6 +344,7 @@ function init() {
 		"T1314": 0,
 		"T1415": 0,
 		"controller": 8,
+		"hideAxes": false,
       }
     },
 	"Square": {
@@ -348,172 +364,139 @@ function init() {
 		"T1314": 0,
 		"T1415": 0,
 		"controller": 8,
+		"hideAxes": false,
       }
     }
   },
   "folders": {}
 };
-	var gui = new dat.GUI( { load: configData } );	
+	var gui = new dat.GUI( { load: configData , width: 600} );	
 	gui.remember(configuration);
 	
+	// Add sliders for individual angles and allow them to be incremented by .00001 
+	var angle1 = gui.add(configuration, 'T12').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+    var angle2 = gui.add(configuration, 'T23').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle3 = gui.add(configuration, 'T34').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle4 = gui.add(configuration, 'T45').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle5 = gui.add(configuration, 'T56').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle6 = gui.add(configuration, 'T67').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle7 = gui.add(configuration, 'T78').min(-Math.PI).max(2 * Math.PI).step(0.00001);
 	
-	gui.add(configuration, 'T12').min(-Math.PI).max(2 * Math.PI).step(0.1);
-    gui.add(configuration, 'T23').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	gui.add(configuration, 'T34').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	gui.add(configuration, 'T45').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	gui.add(configuration, 'T56').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	gui.add(configuration, 'T67').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	gui.add(configuration, 'T78').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	
+	// Add additional arcs under a new folder 
 	var f1 = gui.addFolder('Additional Arc Angles');
-	f1.add(configuration, 'T89').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	f1.add(configuration, 'T910').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	f1.add(configuration, 'T1011').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	f1.add(configuration, 'T1112').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	f1.add(configuration, 'T1213').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	f1.add(configuration, 'T1314').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	f1.add(configuration, 'T1415').min(-Math.PI).max(2 * Math.PI).step(0.1);
-	gui.add(configuration, 'controller', 0, 15,1);
-	
+	var angle8 = f1.add(configuration, 'T89').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle9 = f1.add(configuration, 'T910').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle10 = f1.add(configuration, 'T1011').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle11 = f1.add(configuration, 'T1112').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle12 = f1.add(configuration, 'T1213').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle13 = f1.add(configuration, 'T1314').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle14 = f1.add(configuration, 'T1415').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	gui.add(configuration, 'controller', 0, 15,1).name( 'Number of Arcs' );
+	var axesController = gui.add( configuration, 'hideAxes').name('Hide Axes');
+	axesController.onChange( function(newValue) { scene.remove(axes)} );
 
     render();
     
     function render() {
 	// Called once per frame
 	
-        var delta = clock.getDelta();
+    var delta = clock.getDelta();
 	trackballControls.update(delta);
+	var guiArray = new Array(angle1, angle2, angle3, angle4, angle5, angle6, angle7, angle8, angle9, angle10, angle11, angle12, angle13, angle14);
 	
-	//Variables for the translation of the arcs before and after rotation.
-	var preTranslation = new THREE.Matrix4();
 	
-	var postTranslation = new THREE.Matrix4();
-			
+	var m = new THREE.Matrix4();
 		
-		
-	    var m = new THREE.Matrix4();
-		
-		//Controls which arcs are displayed on the screen.		
-		var i;
-		for( i = 0; i < 15; i++ )
+	//Controls which arcs are displayed on the screen.		
+	var i;
+	for( i = 0; i < 15; i++ )
+	{
+		if( i < configuration.controller )
 		{
-			if( i < configuration.controller )
-			{
-				arcArray[i].visible = true;
-			}
-			else if( i >= configuration.controller )
-			{
-			 arcArray[i].visible = false;
-			}
-		
+			arcArray[i].visible = true;
+			
+		}
+		else if( i >= configuration.controller )
+		{
+		 arcArray[i].visible = false;
 		}
 		
-		preTranslation.makeTranslation(0,1,0);
-		postTranslation.makeTranslation(0,-1,0);
-		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T12));
-		m.multiply( postTranslation );
-                m.multiply( N );
-		
-		
-        arc2.matrix.copy(m);
+	}
+	
+	//Rotate the Arcs using LinkRot Function and Matrices
+	m.multiply(LinkRot(configuration.T12));
+	m.multiply( N );
+	arc2.matrix.copy(m);
 
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T23));
-		m.multiply( postTranslation );
-                m.multiply( N );
-		
-        arc3.matrix.copy(m);
+	
+	m.multiply(LinkRot(configuration.T23));
+	m.multiply( N );
+	arc3.matrix.copy(m);
 
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T34));
-		m.multiply( postTranslation );
-                m.multiply( N );
+	m.multiply(LinkRot(configuration.T34));	
+	m.multiply( N );
+	arc4.matrix.copy(m);
 		
-        arc4.matrix.copy(m);
+	
+	m.multiply(LinkRot(configuration.T45));	
+	m.multiply( N );
+	arc5.matrix.copy(m);
 		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T45));
-		m.multiply( postTranslation );
-                m.multiply( N );
+	
+	m.multiply(LinkRot(configuration.T56));	
+	m.multiply( N );
+	arc6.matrix.copy(m);
 		
-        arc5.matrix.copy(m);
+	
+	m.multiply(LinkRot(configuration.T67));	
+	m.multiply( N );		
+    arc7.matrix.copy(m);
 		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T56));
-		m.multiply( postTranslation );
-                m.multiply( N );
+	
+	m.multiply(LinkRot(configuration.T78));	
+	m.multiply( N );
+	arc8.matrix.copy(m);
 		
-        arc6.matrix.copy(m);
+	
+	m.multiply(LinkRot(configuration.T89));	
+	m.multiply( N );
+	arc9.matrix.copy(m);
 		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T67));
-		m.multiply( postTranslation );
-                m.multiply( N );
+	
+	m.multiply(LinkRot(configuration.T910));	
+	m.multiply( N );
+	arc10.matrix.copy(m);
 		
-        arc7.matrix.copy(m);
+	
+	m.multiply(LinkRot(configuration.T1011));	
+	m.multiply( N );
+	arc11.matrix.copy(m);
 		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T78));
-		m.multiply( postTranslation );
-                m.multiply( N );
+	
+	m.multiply(LinkRot(configuration.T1112));	
+	m.multiply( N );
+	arc12.matrix.copy(m);
 		
-        arc8.matrix.copy(m);
+	
+	m.multiply(LinkRot(configuration.T1213));	
+	m.multiply( N );
+	arc13.matrix.copy(m);
 		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T89));
-		m.multiply( postTranslation );
-                m.multiply( N );
+	
+	m.multiply(LinkRot(configuration.T1314));	
+	m.multiply( N );
+	arc14.matrix.copy(m);
 		
-        arc9.matrix.copy(m);
-		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T910));
-		m.multiply( postTranslation );
-                m.multiply( N );
-		
-        arc10.matrix.copy(m);
-		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T1011));
-		m.multiply( postTranslation );
-                m.multiply( N );
-		
-        arc11.matrix.copy(m);
-		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T1112));
-		m.multiply( postTranslation );
-                m.multiply( N );
-		
-        arc12.matrix.copy(m);
-		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T1213));
-		m.multiply( postTranslation );
-                m.multiply( N );
-		
-        arc13.matrix.copy(m);
-		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T1314));
-		m.multiply( postTranslation );
-                m.multiply( N );
-		
-        arc14.matrix.copy(m);
-		
-		m.multiply( preTranslation );
-		m.multiply(RotX(configuration.T1415));
-		m.multiply( postTranslation );
-                m.multiply( N );
-		
-        arc15.matrix.copy(m);
-		
+	
+	m.multiply(LinkRot(configuration.T1415));	
+	m.multiply( N );
+	arc15.matrix.copy(m);
+	
+	
         
-        // render using requestAnimationFrame
-        requestAnimationFrame(render);
-        renderer.render(scene, camera);
+    // render using requestAnimationFrame
+    requestAnimationFrame(render);
+    renderer.render(scene, camera);
     }
     
 }
