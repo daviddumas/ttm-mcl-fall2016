@@ -17,11 +17,7 @@
     </style>
 </head>
 <body>
-	<input type="button" value="Peanut" id="inc" onclick="peanut()"/>
-	<input type="button" value="Figure 8" id="inc" onclick="figure8()"/>
-	<input type="button" value="Octagon" id="inc" onclick="octagon()"/>
-	<input type="button" value="Pentagon" id="inc" onclick="pentagon()"/>
-	<input type="button" value="Figure S" id="inc" onclick="figureS()"/>
+	
 	
 	<label id="display"></label>
 
@@ -47,25 +43,12 @@ N3.multiplyMatrices(N2,N);
 //Index for the four different colors.
 var c = 0;
 function newArc(){
-    	
+    var paletter = new Array(0xff0000, 0x5000ff, 0xffff00, 0x00ff00);
+	var material = new THREE.MeshBasicMaterial( { color: paletter[ c % 4 ] } )
+	c++;
+	
 	var geometry = new THREE.TorusGeometry( 1, .30, 100, 10, Math.PI * 0.5);
-	if( c % 4 == 0){
-    var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-	c++;
-	}
-	else if( c % 4 == 1){
-    var material = new THREE.MeshBasicMaterial( { color: 0x5000ff } );
-	c++;
-	}
-	else if( c % 4 == 2){
-    var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-	c++;
-	}
-	else if( c % 4 == 3){
-    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-	c++;
-	}
-    var arc = new THREE.Mesh( geometry, material );
+	var arc = new THREE.Mesh( geometry, material );
     arc.matrixAutoUpdate = false;
     return arc;
 	
@@ -93,7 +76,7 @@ function init() {
     trackballControls.zoomSpeed = 0.05;
     
 	// Adapted from website: https://soledadpenades.com/articles/three-js-tutorials/drawing-the-coordinate-axes/.
-	function buildAxis( src, dst, axisColor, dashed ) {
+	/*function buildAxis( src, dst, axisColor, dashed ) {
         var geom = new THREE.Geometry(),
         mat; 
 
@@ -126,7 +109,7 @@ function init() {
         return axes;
 	}
 	
-	buildAxes( 1000 );
+	buildAxes( 1000 );*/
 	
 	
     // place canvas in the target div
@@ -193,41 +176,204 @@ function init() {
 	var arcArray = new Array( arc1, arc2, arc3, arc4, arc5, arc6, arc7, arc8, arc9, arc10, arc11, arc12, arc13, arc14, arc15);
     
     // setup the control gui
-    var controls = new function () {
-    this.T12 = 0;
-	this.T23 = 0;                
-	this.T34 = Math.PI;
-	this.T45 = -Math.PI;
-	this.T56 = 0;
-	this.T67 = 0;
-	this.T78 = Math.PI;
-	this.T89 = 0;
-	this.T910 = 0;
-	this.T1011 = 0;
-	this.T1112 = 0;
-	this.T1213 = 0;
-	this.T1314 = 0;
-	this.T1415 = 0;
-	this.controller = 4;
+    var configuration = {
+	T12: 0,
+	T23: 0, 
+	T34: 0,
+	T45: 0,
+	T56: 0,
+	T67: 0,
+	T78: 0,
+	T89: 0,
+	T910: 0,
+	T1011: 0,
+	T1112: 0,
+	T1213: 0,
+	T1314: 0,
+	T1415: 0,
+	controller: 8,
     };
 	
+	var  configData = {
+  "closed": false,
+  "remembered": {
+    "Default": {
+      "0": {
+        "T12": 0,
+        "T23": -1.9978749131873716,
+        "T34": 0,
+        "T45": 0,
+        "T56": 1.9978749131873716,
+        "T67": -1.9978749131873716,
+        "T78": 0,
+		"T89": 0,
+		"T910": 0,
+		"T1011": 0,
+		"T1112": 0,
+		"T1213": 0,
+		"T1314": 0,
+		"T1415": 0,
+		"controller": 8,        
+      }
+    },
+    "Octagon": {
+      "0": {
+        "T12": 1.9978749131873716,
+        "T23": -1.9978749131873716,
+        "T34": 1.9978749131873716,
+        "T45": -1.9978749131873716,
+        "T56": 1.9978749131873716,
+        "T67": -1.9978749131873716,
+        "T78": 1.9978749131873716,
+		"T89": 0,
+		"T910": 0,
+		"T1011": 0,
+		"T1112": 0,
+		"T1213": 0,
+		"T1314": 0,
+		"T1415": 0,
+		"controller": 8,
+        
+      }
+    },
+    "Peanut": {
+      "0": {
+        "T12": 0,
+        "T23": 0,
+        "T34": 3.14,
+        "T45": 3.14,
+        "T56": 0,
+        "T67": 0,
+        "T78": 3.14,
+		"T89": 0,
+		"T910": 0,
+		"T1011": 0,
+		"T1112": 0,
+		"T1213": 0,
+		"T1314": 0,
+		"T1415": 0,
+		"controller": 8,        
+      }
+    },
+	"S": {
+      "0": {
+        "T12": 0,
+        "T23": 1.570796327,
+        "T34": -3.141592654,
+        "T45": 1.570796327,
+        "T56": 0,
+        "T67": -1.570796327,
+        "T78": 3.141592654,
+		"T89": 0,
+		"T910": 0,
+		"T1011": 0,
+		"T1112": 0,
+		"T1213": 0,
+		"T1314": 0,
+		"T1415": 0,
+		"controller": 8,        
+      }
+    },
+    "U": {
+      "0": {
+        "T12": 0,
+        "T23": 1.570796327,
+        "T34": 0,
+        "T45": -1.570796327,
+        "T56": 0,
+        "T67": 1.570796327,
+        "T78": 0,
+		"T89": 0,
+		"T910": 0,
+		"T1011": 0,
+		"T1112": 0,
+		"T1213": 0,
+		"T1314": 0,
+		"T1415": 0,
+		"controller": 8,       
+      }
+    },
+	"Eight": {
+      "0": {
+        "T12": 0,
+        "T23": 0,
+        "T34": 3.141592654,
+        "T45": 0,
+        "T56": 0,
+        "T67": 0,
+        "T78": 3.141592654,
+        "T89": 0,
+		"T910": 0,
+		"T1011": 0,
+		"T1112": 0,
+		"T1213": 0,
+		"T1314": 0,
+		"T1415": 0,
+		"controller": 8,
+      }
+    },
+	"Pentagon": {
+      "0": {
+        "T12": 2 * Math.PI / 3 ,
+        "T23": Math.atan( Math.sqrt(3) - Math.sqrt(3/2) ),
+        "T34": Math.atan( Math.sqrt(3) + Math.sqrt(3/2) ) - Math.PI,
+        "T45": 2 * Math.PI / 3 ,
+        "T56": -2 * Math.PI / 3 ,
+        "T67": Math.PI - Math.atan( Math.sqrt(3) + Math.sqrt(3/2) ),
+        "T78": -Math.atan( Math.sqrt(3) - Math.sqrt(3/2) ),
+        "T89": 0,
+		"T910": 0,
+		"T1011": 0,
+		"T1112": 0,
+		"T1213": 0,
+		"T1314": 0,
+		"T1415": 0,
+		"controller": 8,
+      }
+    },
+	"Square": {
+      "0": {
+        "T12": 1.1437,
+        "T23": 1.1437,
+        "T34": -1.1437,
+        "T45": -1.1437,
+        "T56": 1.1437,
+        "T67": 1.1437,
+        "T78": -1.1437,
+        "T89": 0,
+		"T910": 0,
+		"T1011": 0,
+		"T1112": 0,
+		"T1213": 0,
+		"T1314": 0,
+		"T1415": 0,
+		"controller": 8,
+      }
+    }
+  },
+  "folders": {}
+};
+	var gui = new dat.GUI( { load: configData } );	
+	gui.remember(configuration);
 	
-    var gui = new dat.GUI();
-    gui.add(controls, 'T12', 0, Math.PI * 2);
-    gui.add(controls, 'T23', 0, Math.PI * 2);
-    gui.add(controls, 'T34', 0, Math.PI * 2);
-	gui.add(controls, 'T45', 0, Math.PI * 2);
-	gui.add(controls, 'T56', 0, Math.PI * 2);
-	gui.add(controls, 'T67', 0, Math.PI * 2);
-	gui.add(controls, 'T78', 0, Math.PI * 2);
-	gui.add(controls, 'T89', 0, Math.PI * 2);
-	gui.add(controls, 'T910', 0, Math.PI * 2);
-	gui.add(controls, 'T1011', 0, Math.PI * 2);
-	gui.add(controls, 'T1112', 0, Math.PI * 2);
-	gui.add(controls, 'T1213', 0, Math.PI * 2);
-	gui.add(controls, 'T1314', 0, Math.PI * 2);
-	gui.add(controls, 'T1415', 0, Math.PI * 2);
-	gui.add(controls, 'controller', 0, 15,1);
+	
+	gui.add(configuration, 'T12').min(-Math.PI).max(2 * Math.PI).step(0.1);
+    gui.add(configuration, 'T23').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'T34').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'T45').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'T56').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'T67').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'T78').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	
+	var f1 = gui.addFolder('Additional Arc Angles');
+	f1.add(configuration, 'T89').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	f1.add(configuration, 'T910').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	f1.add(configuration, 'T1011').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	f1.add(configuration, 'T1112').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	f1.add(configuration, 'T1213').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	f1.add(configuration, 'T1314').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	f1.add(configuration, 'T1415').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'controller', 0, 15,1);
 	
 
     render();
@@ -251,115 +397,115 @@ function init() {
 		var i;
 		for( i = 0; i < 15; i++ )
 		{
-			if( i < controls.controller )
+			if( i < configuration.controller )
 			{
 				arcArray[i].visible = true;
 			}
-			else if( i >= controls.controller )
+			else if( i >= configuration.controller )
 			{
 			 arcArray[i].visible = false;
 			}
 		
 		}
 		
-		preTranslation.makeTranslation(0,-1,0);
-		postTranslation.makeTranslation(0,1,0);
+		preTranslation.makeTranslation(0,1,0);
+		postTranslation.makeTranslation(0,-1,0);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T12));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T12));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
-		//Rotation between arc2 and arc3.
+		
         arc2.matrix.copy(m);
 
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T23));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T23));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc3.matrix.copy(m);
 
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T34));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T34));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc4.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T45));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T45));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc5.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T56));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T56));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc6.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T67));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T67));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc7.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T78));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T78));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc8.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T89));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T89));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc9.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T910));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T910));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc10.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T1011));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T1011));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc11.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T1112));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T1112));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc12.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T1213));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T1213));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc13.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T1314));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T1314));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc14.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(controls.T1415));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T1415));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc15.matrix.copy(m);
