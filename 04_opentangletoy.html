@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>04_opentangletoy</title>
+    <title>The Virtual Tangle Toy</title>
 	<a href="index.html">Back to list of visualizations</a>
     <script src= "js/three.js"></script>
     <script src= "js/dat.gui.js"></script>
@@ -210,11 +210,11 @@ function init() {
     "Default": {
       "0": {
         "T12": 0,
-        "T23": -1.9978749131873716,
+        "T23": -0.635943336226123,
         "T34": 0,
         "T45": 0,
-        "T56": 1.9978749131873716,
-        "T67": -1.9978749131873716,
+        "T56": 0.635943336226123,
+        "T67": -0.635943336226123,
         "T78": 0,
 		"T89": 0,
 		"T910": 0,
@@ -229,13 +229,13 @@ function init() {
     },
     "Octagon": {
       "0": {
-        "T12": 1.9978749131873716,
-        "T23": -1.9978749131873716,
-        "T34": 1.9978749131873716,
-        "T45": -1.9978749131873716,
-        "T56": 1.9978749131873716,
-        "T67": -1.9978749131873716,
-        "T78": 1.9978749131873716,
+        "T12": 0.635943336226123,
+        "T23": -0.635943336226123,
+        "T34": 0.635943336226123,
+        "T45": -0.635943336226123,
+        "T56": 0.635943336226123,
+        "T67": -0.635943336226123,
+        "T78": 0.635943336226123,
 		"T89": 0,
 		"T910": 0,
 		"T1011": 0,
@@ -251,11 +251,11 @@ function init() {
       "0": {
         "T12": 0,
         "T23": 0,
-        "T34": 3.14,
-        "T45": 3.14,
+        "T34": 1,
+        "T45": 1,
         "T56": 0,
         "T67": 0,
-        "T78": 3.14,
+        "T78": 1,
 		"T89": 0,
 		"T910": 0,
 		"T1011": 0,
@@ -270,12 +270,12 @@ function init() {
 	"S": {
       "0": {
         "T12": 0,
-        "T23": 1.570796327,
-        "T34": -3.141592654,
-        "T45": 1.570796327,
+        "T23": 0.5,
+        "T34": -1,
+        "T45": 0.5,
         "T56": 0,
-        "T67": -1.570796327,
-        "T78": 3.141592654,
+        "T67": -0.5,
+        "T78": 1,
 		"T89": 0,
 		"T910": 0,
 		"T1011": 0,
@@ -290,11 +290,11 @@ function init() {
     "U": {
       "0": {
         "T12": 0,
-        "T23": 1.570796327,
+        "T23": 0.5,
         "T34": 0,
-        "T45": -1.570796327,
+        "T45": -0.5,
         "T56": 0,
-        "T67": 1.570796327,
+        "T67": 0.5,
         "T78": 0,
 		"T89": 0,
 		"T910": 0,
@@ -311,11 +311,11 @@ function init() {
       "0": {
         "T12": 0,
         "T23": 0,
-        "T34": 3.141592654,
+        "T34": 1,
         "T45": 0,
         "T56": 0,
         "T67": 0,
-        "T78": 3.141592654,
+        "T78": 1,
         "T89": 0,
 		"T910": 0,
 		"T1011": 0,
@@ -329,13 +329,13 @@ function init() {
     },
 	"Pentagon": {
       "0": {
-        "T12": 2 * Math.PI / 3 ,
-        "T23": Math.atan( Math.sqrt(3) - Math.sqrt(3/2) ),
-        "T34": Math.atan( Math.sqrt(3) + Math.sqrt(3/2) ) - Math.PI,
-        "T45": 2 * Math.PI / 3 ,
-        "T56": -2 * Math.PI / 3 ,
-        "T67": Math.PI - Math.atan( Math.sqrt(3) + Math.sqrt(3/2) ),
-        "T78": -Math.atan( Math.sqrt(3) - Math.sqrt(3/2) ),
+        "T12": 0.666666666666667,
+        "T23": 0.149438616957070,
+        "T34": -0.603809668614080,
+        "T45": 0.666666666666667 ,
+        "T56": -0.666666666666667,
+        "T67": 0.603809668614080,
+        "T78": -0.149438616957070,
         "T89": 0,
 		"T910": 0,
 		"T1011": 0,
@@ -349,13 +349,13 @@ function init() {
     },
 	"Square": {
       "0": {
-        "T12": 1.1437,
-        "T23": 1.1437,
-        "T34": -1.1437,
-        "T45": -1.1437,
-        "T56": 1.1437,
-        "T67": 1.1437,
-        "T78": -1.1437,
+        "T12": 0.364051016828401,
+        "T23": 0.364051016828401,
+        "T34": -0.364051016828401,
+        "T45": -0.364051016828401,
+        "T56": 0.364051016828401,
+        "T67": 0.364051016828401,
+        "T78": -0.364051016828401,
         "T89": 0,
 		"T910": 0,
 		"T1011": 0,
@@ -370,27 +370,28 @@ function init() {
   },
   "folders": {}
 };
-	var gui = new dat.GUI( { load: configData , width: 600} );	
+	var gui = new dat.GUI( { load: configData , width: 350} );	
 	gui.remember(configuration);
 	
+	var pi = 'pi';
 	// Add sliders for individual angles and allow them to be incremented by .00001 
-	var angle1 = gui.add(configuration, 'T12').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-    var angle2 = gui.add(configuration, 'T23').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle3 = gui.add(configuration, 'T34').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle4 = gui.add(configuration, 'T45').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle5 = gui.add(configuration, 'T56').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle6 = gui.add(configuration, 'T67').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle7 = gui.add(configuration, 'T78').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle1 = gui.add(configuration, 'T12').name('Angle1' + pi.sub()).min(-1).max(2).step(0.00001);
+    var angle2 = gui.add(configuration, 'T23').name('Angle2' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle3 = gui.add(configuration, 'T34').name('Angle3' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle4 = gui.add(configuration, 'T45').name('Angle4' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle5 = gui.add(configuration, 'T56').name('Angle5' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle6 = gui.add(configuration, 'T67').name('Angle6' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle7 = gui.add(configuration, 'T78').name('Angle7' + pi.sub()).min(-1).max(2).step(0.00001);
 	
 	// Add additional arcs under a new folder 
 	var f1 = gui.addFolder('Additional Arc Angles');
-	var angle8 = f1.add(configuration, 'T89').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle9 = f1.add(configuration, 'T910').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle10 = f1.add(configuration, 'T1011').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle11 = f1.add(configuration, 'T1112').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle12 = f1.add(configuration, 'T1213').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle13 = f1.add(configuration, 'T1314').min(-Math.PI).max(2 * Math.PI).step(0.00001);
-	var angle14 = f1.add(configuration, 'T1415').min(-Math.PI).max(2 * Math.PI).step(0.00001);
+	var angle8 = f1.add(configuration, 'T89').name('Angle8' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle9 = f1.add(configuration, 'T910').name('Angle9' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle10 = f1.add(configuration, 'T1011').name('Angle10' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle11 = f1.add(configuration, 'T1112').name('Angle11' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle12 = f1.add(configuration, 'T1213').name('Angle12' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle13 = f1.add(configuration, 'T1314').name('Angle13' + pi.sub()).min(-1).max(2).step(0.00001);
+	var angle14 = f1.add(configuration, 'T1415').name('Angle14' + pi.sub()).min(-1).max(2).step(0.00001);
 	gui.add(configuration, 'controller', 0, 15,1).name( 'Number of Arcs' );
 	var axesController = gui.add( configuration, 'hideAxes').name('Hide Axes');
 	axesController.onChange( function(newValue) { scene.remove(axes)} );
@@ -424,71 +425,71 @@ function init() {
 	}
 	
 	//Rotate the Arcs using LinkRot Function and Matrices
-	m.multiply(LinkRot(configuration.T12));
+	m.multiply(LinkRot(Math.PI * configuration.T12));
 	m.multiply( N );
 	arc2.matrix.copy(m);
 
 	
-	m.multiply(LinkRot(configuration.T23));
+	m.multiply(LinkRot(Math.PI * configuration.T23));
 	m.multiply( N );
 	arc3.matrix.copy(m);
 
-	m.multiply(LinkRot(configuration.T34));	
+	m.multiply(LinkRot(Math.PI * configuration.T34));	
 	m.multiply( N );
 	arc4.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T45));	
+	m.multiply(LinkRot(Math.PI * configuration.T45));	
 	m.multiply( N );
 	arc5.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T56));	
+	m.multiply(LinkRot(Math.PI * configuration.T56));	
 	m.multiply( N );
 	arc6.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T67));	
+	m.multiply(LinkRot(Math.PI * configuration.T67));	
 	m.multiply( N );		
     arc7.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T78));	
+	m.multiply(LinkRot(Math.PI * configuration.T78));	
 	m.multiply( N );
 	arc8.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T89));	
+	m.multiply(LinkRot(Math.PI * configuration.T89));	
 	m.multiply( N );
 	arc9.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T910));	
+	m.multiply(LinkRot(Math.PI * configuration.T910));	
 	m.multiply( N );
 	arc10.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T1011));	
+	m.multiply(LinkRot(Math.PI * configuration.T1011));	
 	m.multiply( N );
 	arc11.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T1112));	
+	m.multiply(LinkRot(Math.PI * configuration.T1112));	
 	m.multiply( N );
 	arc12.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T1213));	
+	m.multiply(LinkRot(Math.PI * configuration.T1213));	
 	m.multiply( N );
 	arc13.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T1314));	
+	m.multiply(LinkRot(Math.PI * configuration.T1314));	
 	m.multiply( N );
 	arc14.matrix.copy(m);
 		
 	
-	m.multiply(LinkRot(configuration.T1415));	
+	m.multiply(LinkRot(Math.PI * configuration.T1415));	
 	m.multiply( N );
 	arc15.matrix.copy(m);
 	
