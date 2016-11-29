@@ -86,7 +86,7 @@ function init() {
     trackballControls.zoomSpeed = 0.05;
     
 	// Adapted from website: https://soledadpenades.com/articles/three-js-tutorials/drawing-the-coordinate-axes/.
-	function buildAxis( src, dst, axisColor, dashed ) {
+	/*function buildAxis( src, dst, axisColor, dashed ) {
         var geom = new THREE.Geometry(),
         mat; 
 
@@ -119,7 +119,7 @@ function init() {
         return axes;
 	}
 	
-	buildAxes( 1000 );
+	buildAxes( 1000 );*/
 	
 	
     // place canvas in the target div
@@ -162,7 +162,6 @@ function init() {
 	T56: 0,
 	T67: 0,
 	T78: 0,
-	T81: 0
 	};
 	
 	var  configData = {
@@ -177,7 +176,7 @@ function init() {
         "T56": 1.9978749131873716,
         "T67": -1.9978749131873716,
         "T78": 0,
-        "T81": -1.9978749131873716
+        
       }
     },
     "Octagon": {
@@ -189,7 +188,7 @@ function init() {
         "T56": 1.9978749131873716,
         "T67": -1.9978749131873716,
         "T78": 1.9978749131873716,
-        "T81": -1.9978749131873716
+        
       }
     },
     "Peanut": {
@@ -201,7 +200,7 @@ function init() {
         "T56": 0,
         "T67": 0,
         "T78": 3.14,
-        "T81": 3.14
+        
       }
     },
 	"S": {
@@ -213,7 +212,7 @@ function init() {
         "T56": 0,
         "T67": -1.570796327,
         "T78": 3.141592654,
-        "T81": -1.570796327
+        
       }
     },
     "U": {
@@ -225,7 +224,7 @@ function init() {
         "T56": 0,
         "T67": 1.570796327,
         "T78": 0,
-        "T81": -1.570796327
+        
       }
     },
 	"Eight": {
@@ -237,31 +236,31 @@ function init() {
         "T56": 0,
         "T67": 0,
         "T78": 3.141592654,
-        "T81": 0
+       
       }
     },
 	"Pentagon": {
       "0": {
-        "T12": 0,
-        "T23": 0,
-        "T34": 3.141592654,
-        "T45": 0,
-        "T56": 0,
-        "T67": 0,
-        "T78": 3.141592654,
-        "T81": 0
+        "T12": 2 * Math.PI / 3 ,
+        "T23": Math.atan( Math.sqrt(3) - Math.sqrt(3/2) ),
+        "T34": Math.atan( Math.sqrt(3) + Math.sqrt(3/2) ) - Math.PI,
+        "T45": 2 * Math.PI / 3 ,
+        "T56": -2 * Math.PI / 3 ,
+        "T67": Math.PI - Math.atan( Math.sqrt(3) + Math.sqrt(3/2) ),
+        "T78": -Math.atan( Math.sqrt(3) - Math.sqrt(3/2) ),
+        
       }
     },
 	"Square": {
       "0": {
-        "T12": 0,
-        "T23": 0,
-        "T34": 3.141592654,
-        "T45": 0,
-        "T56": 0,
-        "T67": 0,
-        "T78": 3.141592654,
-        "T81": 0
+        "T12": 1.1437,
+        "T23": 1.1437,
+        "T34": -1.1437,
+        "T45": -1.1437,
+        "T56": 1.1437,
+        "T67": 1.1437,
+        "T78": -1.1437,
+        
       }
     }
   },
@@ -274,14 +273,14 @@ function init() {
 	gui.remember(configuration);
 	
 	
-	gui.add(configuration, 'T12').min(-Math.PI).max(Math.PI);
-    gui.add(configuration, 'T23').min(-Math.PI).max(Math.PI);
-	gui.add(configuration, 'T34').min(-Math.PI).max(Math.PI);
-	gui.add(configuration, 'T45').min(-Math.PI).max(Math.PI);
-	gui.add(configuration, 'T56').min(-Math.PI).max(Math.PI);
-	gui.add(configuration, 'T67').min(-Math.PI).max(Math.PI);
-	gui.add(configuration, 'T78').min(-Math.PI).max(Math.PI);
-	gui.add(configuration, 'T81').min(-Math.PI).max(Math.PI);
+	gui.add(configuration, 'T12').min(-Math.PI).max(2 * Math.PI).step(0.1);
+    gui.add(configuration, 'T23').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'T34').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'T45').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'T56').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'T67').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	gui.add(configuration, 'T78').min(-Math.PI).max(2 * Math.PI).step(0.1);
+	
 	
 
 
@@ -306,66 +305,60 @@ function init() {
 		
 		//Controls which arcs are displayed on the screen.		
 		
+		preTranslation.makeTranslation(0,1,0);
+		postTranslation.makeTranslation(0,-1,0);
 		
-		preTranslation.makeTranslation(0,-1,0);
-		postTranslation.makeTranslation(0,1,0);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(configuration.T12));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T12));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
-		//Rotation between arc2 and arc3.
+		
         arc2.matrix.copy(m);
 
-		m.multiply( postTranslation );
-		m.multiply(RotX(configuration.T23));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T23));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc3.matrix.copy(m);
 
-		m.multiply( postTranslation );
-		m.multiply(RotX(configuration.T34));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T34));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc4.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(configuration.T45));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T45));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc5.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(configuration.T56));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T56));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc6.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(configuration.T67));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T67));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc7.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(configuration.T78));
 		m.multiply( preTranslation );
+		m.multiply(RotX(configuration.T78));
+		m.multiply( postTranslation );
                 m.multiply( N );
 		
         arc8.matrix.copy(m);
 		
-		m.multiply( postTranslation );
-		m.multiply(RotX(configuration.T81));
-		m.multiply( preTranslation );
-                m.multiply( N );
-		
-        arc1.matrix.copy(m);
 		
 		
 		
