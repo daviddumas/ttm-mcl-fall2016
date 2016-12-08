@@ -1,6 +1,8 @@
 Tangle Toy Moduli
 =================
 
+[Live demo: http://uicmcl.github.io/ttm-mcl-fall2016/](http://uicmcl.github.io/ttm-mcl-fall2016/)
+
 This is the code repository for an undergraduate research project of the
 [Mathematical Computing Laboratory](http://mcl.math.uic.edu/)
 at
